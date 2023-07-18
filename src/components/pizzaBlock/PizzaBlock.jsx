@@ -1,24 +1,56 @@
+import React from "react";
+
+const typeNames = ["Thin", "Traditional"];
 function PizzaBlock(props) {
-  const { title, price } = props;
+  const { title, price, imageUrl, sizes, types } = props;
+
+  const [activeType, setActiveType] = React.useState(0);
+  const onActiveType = (index) => {
+    setActiveType(index)
+  };
+  const [activeSize, setActiveSize] = React.useState(26);
+  const onActiveSize = (size) => {
+    setActiveSize(size)
+  };
+
   return (
     <div className="pizza-block">
       <img className="pizza-block__image"
-        src="https://dodopizza-a.akamaihd.net/static/Img/Products/Pizza/ru-RU/b750f576-4a83-48e6-a283-5a8efb68c35d.jpg"
-        alt="Pizza" />
+        src={imageUrl}
+        alt={title}
+      />
       <h4 className="pizza-block__title">{title}</h4>
       <div className="pizza-block__selector">
         <ul>
-          <li className="active">тонкое</li>
-          <li>традиционное</li>
+          {
+            types.map((el, index) => {
+              return (
+                <li
+                  onClick={() => { onActiveType(el) }}
+                  key={`${el}_${typeNames[index]}`}
+                  className={activeType === el ? "active" : ""}
+                >{typeNames[el]}</li>
+              )
+            })
+          }
         </ul>
         <ul>
-          <li className="active">26 см.</li>
-          <li>30 см.</li>
-          <li>40 см.</li>
+          {
+            sizes.map(el => {
+              return (
+                <li
+                  onClick={() => { onActiveSize(el) }}
+                  key={el}
+                  className={activeSize === el ? "active" : ""}
+                >
+                  {el} см.</li>
+              )
+            })
+          }
         </ul>
       </div>
       <div className="pizza-block__bottom">
-        <div className="pizza-block__price">от {price} $</div>
+        <div className="pizza-block__price">from {price} $</div>
         <div className="button button--outline button--add">
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
@@ -26,7 +58,7 @@ function PizzaBlock(props) {
               fill="white" />
           </svg>
           <span>Добавить</span>
-          <i>2</i>
+          <i>0</i>
         </div>
       </div>
     </div>
