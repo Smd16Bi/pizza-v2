@@ -2,11 +2,13 @@ import React from "react"
 
 const allCategories = ["All", "Meat", "Vegetarian", "Grill", "Sharp", "Closed"];
 
-function Categories() {
+function Categories({ onHandlerLabel }) {
   const [activeIndex, setActiveIndex] = React.useState(0);
   const onClickCategory = (index) => {
-    setActiveIndex(index)
+    setActiveIndex(index);
+    onHandlerLabel(allCategories[index])
   }
+
 
   const renderHtmlCategories = () => {
     return (
