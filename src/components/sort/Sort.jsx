@@ -1,17 +1,25 @@
 import React from "react"
-const sorts = ["Popularity", "Price", "Alphabet"];
-function Sort() {
+const sorts = [
+  { name: "Popularity (desc)", sort: "rating", how: "desc" },
+  { name: "Popularity (asc)", sort: "rating", how: "asc" },
+  { name: "Price (desc)", sort: "price", how: "desc" },
+  { name: "Price (asc)", sort: "price", how: "asc" },
+  { name: "Alphabet (desc)", sort: "title", how: "desc" },
+  { name: "Alphabet (asc)", sort: "title", how: "asc" },
+];
+function Sort({ sort, onSort }) {
+  console.log(sort);
   const [open, setOpen] = React.useState(false);
-  const [activeSort, setActiveSort] = React.useState(sorts[0]);
   const body = React.useRef(document.querySelector("body"));
 
   const handlerOpen = () => {
     setOpen(prev => prev = !prev);
   }
-  const handlerAcitveSort = (index) => {
-    setActiveSort(sorts[index]);
+  const handlerAcitveSort = (index, property, type) => {
+    onSort({ id: index, property: property, how: type });
     setOpen(prev => prev = !prev);
   }
+
   body.current.addEventListener("click", function () {
     setOpen(false)
   })
@@ -22,9 +30,9 @@ function Sort() {
         return (
           <li
             key={index}
-            onClick={() => handlerAcitveSort(index)}
-            className={activeSort === el ? "active" : ""}
-          >{el}</li>
+            onClick={() => handlerAcitveSort(index, el.sort, el.how)}
+            className={sort === index ? "active" : ""}
+          >{el.name}</li>
         )
       })
     )
@@ -39,7 +47,7 @@ function Sort() {
             fill="#2C2C2C" />
         </svg>
         <b>Sort by:</b>
-        <span onClick={handlerOpen}>{activeSort}</span>
+        <span onClick={handlerOpen}>{sorts[sort].name}</span>
       </div>
       {
         open && <div className="sort__popup">

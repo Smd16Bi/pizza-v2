@@ -6,15 +6,33 @@ const Home = () => {
   const [label, setLabel] = React.useState("All");
   const [isLoading, setIsLoading] = React.useState(true);
 
-  React.useEffect(() => {
-    // fetch("https://64b7542edf0839c97e16820e.mockapi.io/pizza")
-    //   .then(res => res.json())
-    //   .then(res => {
-    //     setItems(res);
-    //     setIsLoading(prev => prev = !prev);
-    //   })
+  const [categoryId, setCategoryId] = React.useState(0);
+  const [sortType, setSortType] = React.useState({ id: 0, property: "rating", how: "desc" });
 
-  }, [])
+  React.useEffect(() => {
+    setIsLoading(true);
+    getData()
+    window.scrollTo(0, 0)
+  }, [categoryId, sortType])
+
+  async function getData() {
+    let path = new URL('https://64b7542edf0839c97e16820e.mockapi.io/pizza');
+    if (categoryId === 0) {
+      if (sortType !== 0) {
+        path.searchParams.append('sortBy', sortType.property);
+        path.searchParams.append('order', sortType.how);
+      }
+    } else {
+      path.searchParams.append('sortBy', sortType.property);
+      path.searchParams.append('order', sortType.how);
+      path.searchParams.append('category', categoryId);
+    }
+
+    const data = await fetch(path);
+    const response = await data.json();
+    setIsLoading(false);
+    setItems(response);
+  }
 
 
   const handlerLabel = (label) => {
@@ -40,13 +58,15 @@ const Home = () => {
   }
   return (
     <>
-      <div className="content__top">
-        <Categories onHandlerLabel={handlerLabel} />
-        <Sort />
-      </div>
-      <h2 className="content__title">{label}</h2>
-      <div className="content__items">
-        {renderPizzas()}
+      <div className="container">
+        <div className="content__top">
+          <Categories onHandlerLabel={handlerLabel} categoryId={categoryId} onCategory={setCategoryId} />
+          <Sort sort={sortType.id} onSort={setSortType} />
+        </div>
+        <h2 className="content__title">{label}</h2>
+        <div className="content__items">
+          {renderPizzas()}
+        </div>
       </div>
     </>
   )

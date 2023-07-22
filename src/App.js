@@ -12,13 +12,11 @@ const App = () => {
     <div className="wrapper">
       <Header />
       <div className="content">
-        <div className="container">
-          <Routes>
-            <Route path="/pizza-v2" element={<Home />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="*" element={<Notfound />} />
-          </Routes>
-        </div>
+        <Routes>
+          <Route path="/pizza-v2" element={<Home />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="*" element={<Notfound />} />
+        </Routes>
       </div>
     </div>
   )

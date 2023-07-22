@@ -2,10 +2,10 @@ import React from "react"
 
 const allCategories = ["All", "Meat", "Vegetarian", "Grill", "Sharp", "Closed"];
 
-function Categories({ onHandlerLabel }) {
-  const [activeIndex, setActiveIndex] = React.useState(0);
+function Categories({ onHandlerLabel, categoryId, onCategory }) {
+
   const onClickCategory = (index) => {
-    setActiveIndex(index);
+    onCategory(index);
     onHandlerLabel(allCategories[index])
   }
 
@@ -16,7 +16,7 @@ function Categories({ onHandlerLabel }) {
         return (
           <li
             key={`${el}_${index}`}
-            className={activeIndex === index ? "active" : ""}
+            className={categoryId === index ? "active" : ""}
             onClick={() => { onClickCategory(index) }}>
             {el}
           </li>
