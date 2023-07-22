@@ -1,7 +1,7 @@
 import React from 'react'
-import { Categories, PizzaBlock, PizzaLoading, Sort } from '../components';
+import { Categories, Pagination, PizzaBlock, PizzaLoading, Sort } from '../components';
 
-const Home = () => {
+const Home = ({ searchValue }) => {
   const [items, setItems] = React.useState([]);
   const [label, setLabel] = React.useState("All");
   const [isLoading, setIsLoading] = React.useState(true);
@@ -9,23 +9,31 @@ const Home = () => {
   const [categoryId, setCategoryId] = React.useState(0);
   const [sortType, setSortType] = React.useState({ id: 0, property: "rating", how: "desc" });
 
+  const [currentPage, setCurrentPage] = React.useState(0);
+
   React.useEffect(() => {
     setIsLoading(true);
     getData()
     window.scrollTo(0, 0)
-  }, [categoryId, sortType])
+  }, [categoryId, sortType, searchValue, currentPage])
 
   async function getData() {
-    let path = new URL('https://64b7542edf0839c97e16820e.mockapi.io/pizza');
+    const path = new URL(`https://64b7542edf0839c97e16820e.mockapi.io/pizza?page=${currentPage + 1}&limit=4`);
+    console.log(path);
     if (categoryId === 0) {
       if (sortType !== 0) {
+        path.searchParams.append('search', searchValue);
         path.searchParams.append('sortBy', sortType.property);
         path.searchParams.append('order', sortType.how);
       }
     } else {
+      if (searchValue) {
+        path.searchParams.append('search', searchValue);
+      } else {
+        path.searchParams.append('category', categoryId);
+      }
       path.searchParams.append('sortBy', sortType.property);
       path.searchParams.append('order', sortType.how);
-      path.searchParams.append('category', categoryId);
     }
 
     const data = await fetch(path);
@@ -33,6 +41,11 @@ const Home = () => {
     setIsLoading(false);
     setItems(response);
   }
+
+  const searchItems = () => {
+    return items.filter(el => el.title.toLowerCase().includes(searchValue.toLowerCase()))
+  }
+
 
 
   const handlerLabel = (label) => {
@@ -67,6 +80,7 @@ const Home = () => {
         <div className="content__items">
           {renderPizzas()}
         </div>
+        <Pagination setCurrentPage={setCurrentPage} />
       </div>
     </>
   )

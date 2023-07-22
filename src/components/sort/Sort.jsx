@@ -8,7 +8,6 @@ const sorts = [
   { name: "Alphabet (asc)", sort: "title", how: "asc" },
 ];
 function Sort({ sort, onSort }) {
-  console.log(sort);
   const [open, setOpen] = React.useState(false);
   const body = React.useRef(document.querySelector("body"));
 
