@@ -1,20 +1,28 @@
 import React from 'react'
 import { Categories, Pagination, PizzaBlock, PizzaLoading, Sort } from '../components';
 import { SearchContext } from '../App';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCategoryId, setSortType } from '../redux/slices/filterSlice';
 
 
 const Home = () => {
+  // Hook React
   const { searchValue, setSearchValue } = React.useContext(SearchContext)
-
   const [items, setItems] = React.useState([]);
   const [label, setLabel] = React.useState("All");
   const [isLoading, setIsLoading] = React.useState(true);
-
-  const [categoryId, setCategoryId] = React.useState(0);
-  const [sortType, setSortType] = React.useState({ id: 0, property: "rating", how: "desc" });
-
   const [currentPage, setCurrentPage] = React.useState(0);
-
+  // Redux
+  const categoryId = useSelector(state => state.filter.categoryId);
+  const sortType = useSelector(state => state.filter.sort);
+  const dispatch = useDispatch();
+  // Method
+  const onClickCategory = (id) => {
+    dispatch(setCategoryId(id))
+  }
+  const onClickSort = (obj) => {
+    dispatch(setSortType(obj))
+  }
   React.useEffect(() => {
     setIsLoading(true);
     getData()
@@ -74,8 +82,8 @@ const Home = () => {
     <>
       <div className="container">
         <div className="content__top">
-          <Categories onHandlerLabel={handlerLabel} categoryId={categoryId} onCategory={setCategoryId} onSearch={setSearchValue} />
-          <Sort sort={sortType.id} onSort={setSortType} />
+          <Categories onHandlerLabel={handlerLabel} categoryId={categoryId} onCategory={onClickCategory} onSearch={setSearchValue} />
+          <Sort sort={sortType.id} onSort={onClickSort} />
         </div>
         <h2 className="content__title">{label}</h2>
         <div className="content__items">
