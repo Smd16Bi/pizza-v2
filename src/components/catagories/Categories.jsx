@@ -2,11 +2,12 @@ import React from "react"
 
 const allCategories = ["All", "Meat", "Vegetarian", "Grill", "Sharp", "Closed"];
 
-function Categories({ onHandlerLabel, categoryId, onCategory }) {
+function Categories({ onHandlerLabel, categoryId, onCategory, onSearch }) {
 
   const onClickCategory = (index) => {
     onCategory(index);
     onHandlerLabel(allCategories[index])
+    onSearch("");
   }
 
 

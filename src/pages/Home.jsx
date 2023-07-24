@@ -1,7 +1,11 @@
 import React from 'react'
 import { Categories, Pagination, PizzaBlock, PizzaLoading, Sort } from '../components';
+import { SearchContext } from '../App';
 
-const Home = ({ searchValue }) => {
+
+const Home = () => {
+  const { searchValue, setSearchValue } = React.useContext(SearchContext)
+
   const [items, setItems] = React.useState([]);
   const [label, setLabel] = React.useState("All");
   const [isLoading, setIsLoading] = React.useState(true);
@@ -19,7 +23,6 @@ const Home = ({ searchValue }) => {
 
   async function getData() {
     const path = new URL(`https://64b7542edf0839c97e16820e.mockapi.io/pizza?page=${currentPage + 1}&limit=4`);
-    console.log(path);
     if (categoryId === 0) {
       if (sortType !== 0) {
         path.searchParams.append('search', searchValue);
@@ -42,9 +45,7 @@ const Home = ({ searchValue }) => {
     setItems(response);
   }
 
-  const searchItems = () => {
-    return items.filter(el => el.title.toLowerCase().includes(searchValue.toLowerCase()))
-  }
+
 
 
 
@@ -73,7 +74,7 @@ const Home = ({ searchValue }) => {
     <>
       <div className="container">
         <div className="content__top">
-          <Categories onHandlerLabel={handlerLabel} categoryId={categoryId} onCategory={setCategoryId} />
+          <Categories onHandlerLabel={handlerLabel} categoryId={categoryId} onCategory={setCategoryId} onSearch={setSearchValue} />
           <Sort sort={sortType.id} onSort={setSortType} />
         </div>
         <h2 className="content__title">{label}</h2>
