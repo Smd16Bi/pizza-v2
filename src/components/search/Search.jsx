@@ -1,16 +1,33 @@
 import React from 'react'
 import styles from "./Search.module.scss"
 import { SearchContext } from '../../App'
+import debounce from 'lodash.debounce'
+
+
 
 
 const Search = () => {
-  const { searchValue, setSearchValue } = React.useContext(SearchContext)
+  const [value, setValue] = React.useState("");
+  const { setSearchValue } = React.useContext(SearchContext);
+  const inputRef = React.useRef("");
+
+  const updateSearchValue = React.useCallback(
+    debounce((str) => {
+      setSearchValue(str)
+    }, 1000),
+    [],
+  );
   const handleSearch = (event) => {
-    setSearchValue(event.target.value)
+    setValue(event.target.value);
+    updateSearchValue(event.target.value)
   }
   const handleClearSearch = () => {
-    setSearchValue("")
+    setSearchValue("");
+    setValue("");
+    inputRef.current.focus();
   }
+
+
   return (
     <div className={styles.root} >
       <svg className={styles.icon} width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -26,13 +43,14 @@ const Search = () => {
       </svg>
 
       <input
+        ref={inputRef}
         onChange={handleSearch}
-        value={searchValue}
+        value={value}
         className={styles.input}
         type="serch"
         placeholder='Search...'
       />
-      {searchValue.length !== 0
+      {value.length !== 0
         && <span onClick={handleClearSearch} className={styles.clear}>X</span>
       }
     </div>

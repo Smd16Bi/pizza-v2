@@ -1,8 +1,9 @@
-import React from 'react'
+import React from 'react';
+import axios from 'axios';
 import { Categories, Pagination, PizzaBlock, PizzaLoading, Sort } from '../components';
 import { SearchContext } from '../App';
 import { useDispatch, useSelector } from 'react-redux';
-import { setCategoryId, setSortType } from '../redux/slices/filterSlice';
+import { setCategoryId, setCurrentPage, setSortType } from '../redux/slices/filterSlice';
 
 
 const Home = () => {
@@ -11,10 +12,10 @@ const Home = () => {
   const [items, setItems] = React.useState([]);
   const [label, setLabel] = React.useState("All");
   const [isLoading, setIsLoading] = React.useState(true);
-  const [currentPage, setCurrentPage] = React.useState(0);
   // Redux
   const categoryId = useSelector(state => state.filter.categoryId);
   const sortType = useSelector(state => state.filter.sort);
+  const currentPage = useSelector(state => state.filter.currentPage);
   const dispatch = useDispatch();
   // Method
   const onClickCategory = (id) => {
@@ -22,6 +23,9 @@ const Home = () => {
   }
   const onClickSort = (obj) => {
     dispatch(setSortType(obj))
+  }
+  const onClickPage = (page) => {
+    dispatch(setCurrentPage(page))
   }
   React.useEffect(() => {
     setIsLoading(true);
@@ -47,15 +51,11 @@ const Home = () => {
       path.searchParams.append('order', sortType.how);
     }
 
-    const data = await fetch(path);
-    const response = await data.json();
+    const response = await axios.get(path);
+    const data = await response.data;
     setIsLoading(false);
-    setItems(response);
+    setItems(data);
   }
-
-
-
-
 
   const handlerLabel = (label) => {
     setLabel(prev => prev = label);
@@ -89,7 +89,7 @@ const Home = () => {
         <div className="content__items">
           {renderPizzas()}
         </div>
-        <Pagination setCurrentPage={setCurrentPage} />
+        <Pagination setCurrentPage={onClickPage} />
       </div>
     </>
   )
