@@ -1,19 +1,18 @@
 import React from 'react'
 import styles from "./Search.module.scss"
-import { SearchContext } from '../../App'
 import debounce from 'lodash.debounce'
-
-
+import { useDispatch, useSelector } from 'react-redux'
+import { setSearchValue } from '../../redux/slices/filterSlice'
 
 
 const Search = () => {
+  const dispatch = useDispatch();
   const [value, setValue] = React.useState("");
-  const { setSearchValue } = React.useContext(SearchContext);
   const inputRef = React.useRef("");
 
   const updateSearchValue = React.useCallback(
     debounce((str) => {
-      setSearchValue(str)
+      dispatch(setSearchValue(str))
     }, 1000),
     [],
   );
@@ -22,11 +21,15 @@ const Search = () => {
     updateSearchValue(event.target.value)
   }
   const handleClearSearch = () => {
-    setSearchValue("");
+    dispatch(setSearchValue(""))
     setValue("");
     inputRef.current.focus();
   }
+  const categoryId = useSelector(state => state.filter.categoryId);
 
+  React.useEffect(() => {
+    setValue("");
+  }, [categoryId]);
 
   return (
     <div className={styles.root} >

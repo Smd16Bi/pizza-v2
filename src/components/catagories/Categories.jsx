@@ -1,13 +1,17 @@
 import React from "react"
+import { useDispatch } from 'react-redux'
+import { setSearchValue } from '../../redux/slices/filterSlice'
+
 
 const allCategories = ["All", "Meat", "Vegetarian", "Grill", "Sharp", "Closed"];
 
-function Categories({ onHandlerLabel, categoryId, onCategory, onSearch }) {
+function Categories({ onHandlerLabel, categoryId, onCategory }) {
+  const dispatch = useDispatch();
 
   const onClickCategory = (index) => {
     onCategory(index);
     onHandlerLabel(allCategories[index])
-    onSearch("");
+    dispatch(setSearchValue(""))
   }
 
 

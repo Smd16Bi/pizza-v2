@@ -18,10 +18,21 @@ function Sort({ sort, onSort }) {
     onSort({ id: index, property: property, how: type });
     setOpen(prev => prev = !prev);
   }
+  // 16 випуск 14:11
 
-  body.current.addEventListener("click", function () {
-    setOpen(false)
-  })
+  React.useEffect(() => {
+    const handleCloseOutside = () => {
+      setOpen(false);
+      console.log(1);
+    }
+    body.current.addEventListener("click", handleCloseOutside);
+
+    return () => {
+      body.current.removeEventListener("click", handleCloseOutside);
+    }
+  }, [])
+
+
 
   const renderSortHtml = () => {
     return (
