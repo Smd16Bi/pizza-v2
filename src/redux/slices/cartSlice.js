@@ -5,7 +5,7 @@ const initialState = {
   totalCount: 0,
   items: []
 }
-
+// 16 вип 58:42
 
 const cartSlice = createSlice({
   name: "cart",
@@ -24,8 +24,23 @@ const cartSlice = createSlice({
         })
       }
     },
+    changeCount(state, action) {
+      const findItem = state.items.find(obj =>
+        obj.uniqId === action.payload.id);
+      switch (action.payload.type) {
+        case "plus":
+          if (findItem) findItem.count++;
+          break;
+        case "minus":
+          if (findItem) findItem.count--;
+          if (findItem.count <= 0) {
+            state.items = state.items.filter(el => el.uniqId !== action.payload.id)
+          }
+          break;
+      }
+    },
     removeItem(state, action) {
-      state.items.filter(el => el.id !== action.payload)
+      state.items = state.items.filter(el => el.uniqId !== action.payload);
     },
     clearItems(state) {
       state.items = []
@@ -44,6 +59,6 @@ const cartSlice = createSlice({
 })
 
 
-export const { addItem, removeItem, clearItems, getTotalPrice, getTotalCount } = cartSlice.actions
+export const { addItem, changeCount, removeItem, clearItems, getTotalPrice, getTotalCount } = cartSlice.actions
 
 export default cartSlice.reducer

@@ -19,7 +19,8 @@ function PizzaBlock(props) {
       price,
       imageUrl,
       type: typeNames[activeType],
-      size: activeSize
+      size: activeSize,
+      uniqId: `${id}_${title}_${activeSize}_${typeNames[activeType]}`
     }
     dispatch(addItem(item))
   }
