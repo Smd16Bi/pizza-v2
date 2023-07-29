@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setCategoryId, setCurrentPage, setFilters, setSortType } from '../redux/slices/filterSlice';
 import qs from 'qs';
 import { useNavigate } from 'react-router';
+import { fetchData } from '../redux/slices/dataSlice';
 
 
 const Home = () => {
@@ -12,16 +13,11 @@ const Home = () => {
   const dispatch = useDispatch();
   const isSearch = React.useRef(false);
   const isMounted = React.useRef(false);
-
   // Hook React
-  const [items, setItems] = React.useState([]);
   const [label, setLabel] = React.useState("All");
-  const [isLoading, setIsLoading] = React.useState(true);
   // Redux
-  const categoryId = useSelector(state => state.filter.categoryId);
-  const sortType = useSelector(state => state.filter.sort);
-  const currentPage = useSelector(state => state.filter.currentPage);
-  const searchValue = useSelector(state => state.filter.searchValue);
+  const { categoryId, sort, currentPage, searchValue } = useSelector(state => state.filter);
+  const { items, status } = useSelector((state) => state.data);
 
   // Method
   const onClickCategory = (id) => {
@@ -44,16 +40,15 @@ const Home = () => {
 
   React.useEffect(() => {
     if (!isSearch.current) {
-      setIsLoading(true);
       getData()
       window.scrollTo(0, 0)
     }
-  }, [categoryId, sortType, searchValue, currentPage]);
+  }, [categoryId, sort, searchValue, currentPage]);
 
   React.useEffect(() => {
     if (isMounted.current) {
       const queryString = qs.stringify({
-        sortType: sortType,
+        sortType: sort,
         categoryId: categoryId,
         currentPage: currentPage
       })
@@ -61,16 +56,16 @@ const Home = () => {
       navigate(`?${queryString}`)
     }
     isMounted.current = true
-  }, [categoryId, sortType, searchValue, currentPage]);
+  }, [categoryId, sort, searchValue, currentPage]);
 
 
   async function getData() {
     const path = new URL(`https://64b7542edf0839c97e16820e.mockapi.io/pizza?page=${currentPage + 1}&limit=4`);
     if (categoryId === 0) {
-      if (sortType !== 0) {
+      if (sort !== 0) {
         path.searchParams.append('search', searchValue);
-        path.searchParams.append('sortBy', sortType.property);
-        path.searchParams.append('order', sortType.how);
+        path.searchParams.append('sortBy', sort.property);
+        path.searchParams.append('order', sort.how);
       }
     } else {
       if (searchValue) {
@@ -78,14 +73,11 @@ const Home = () => {
       } else {
         path.searchParams.append('category', categoryId);
       }
-      path.searchParams.append('sortBy', sortType.property);
-      path.searchParams.append('order', sortType.how);
+      path.searchParams.append('sortBy', sort.property);
+      path.searchParams.append('order', sort.how);
     }
+    dispatch(fetchData(path))
 
-    const response = await axios.get(path);
-    const data = await response.data;
-    setIsLoading(false);
-    setItems(data);
   }
 
   const handlerLabel = (label) => {
@@ -93,12 +85,11 @@ const Home = () => {
   }
 
   const renderPizzas = () => {
-    return (
-      isLoading
-        ?
-        [...new Array(6)].map((_, index) => <PizzaLoading key={index} />)
-        :
-        items.map(obj => {
+    switch (status) {
+      case "loading":
+        return [...new Array(6)].map((_, index) => <PizzaLoading key={index} />)
+      case "success":
+        return items.map(obj => {
           return (
             <PizzaBlock
               {...obj}
@@ -107,14 +98,23 @@ const Home = () => {
           )
         })
 
-    )
+      case "error":
+        return <div className='container__error-info'>
+          <h2>Error happens <icon>😕</icon></h2>
+          <p>You have to wait a bit</p>
+        </div>
+
+      default:
+        break;
+    }
+
   }
   return (
     <>
       <div className="container">
         <div className="content__top">
           <Categories onHandlerLabel={handlerLabel} categoryId={categoryId} onCategory={onClickCategory} />
-          <Sort sort={sortType.id} onSort={onClickSort} />
+          <Sort sort={sort.id} onSort={onClickSort} />
         </div>
         <h2 className="content__title">{label}</h2>
         <div className="content__items">

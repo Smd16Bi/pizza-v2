@@ -2,7 +2,6 @@ import React from 'react'
 import { useDispatch } from 'react-redux'
 import Svg from '../Svg'
 import { changeCount, removeItem } from '../../redux/slices/cartSlice';
-
 function CartItem({ imageUrl, title, type, size, uniqId, count, price }) {
   const dispatch = useDispatch();
 
@@ -18,6 +17,7 @@ function CartItem({ imageUrl, title, type, size, uniqId, count, price }) {
   const onClickRemove = () => {
     dispatch(removeItem(uniqId))
   }
+
 
 
   return (

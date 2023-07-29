@@ -23,7 +23,6 @@ function Sort({ sort, onSort }) {
   React.useEffect(() => {
     const handleCloseOutside = () => {
       setOpen(false);
-      console.log(1);
     }
     body.current.addEventListener("click", handleCloseOutside);
 

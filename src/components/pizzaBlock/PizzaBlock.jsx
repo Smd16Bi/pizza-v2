@@ -25,12 +25,11 @@ function PizzaBlock(props) {
     dispatch(addItem(item))
   }
 
-  // 16вип 41:11
   React.useEffect(() => {
     const filterItems = items.filter(obj => obj.id === id);
     const currentCount = filterItems.reduce((accum, obj) => accum + obj.count, 0);
     setCount(currentCount);
-  }, [items])
+  }, [items, id])
   const onActiveType = (index) => {
     setActiveType(index)
   };
