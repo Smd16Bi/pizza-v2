@@ -4,9 +4,10 @@ import ReactPaginate from 'react-paginate';
 
 import styles from "./Pagination.module.scss"
 import { useSelector } from 'react-redux';
+import { selectFilter } from '../../redux/slices/filterSlice';
 
 const Pagination = ({ setCurrentPage }) => {
-  const currentPage = useSelector(state => state.filter.currentPage);
+  const { currentPage } = useSelector(selectFilter);
   const handlePage = (event) => {
     setCurrentPage(event.selected)
   }

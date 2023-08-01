@@ -2,7 +2,7 @@ import React from 'react'
 import styles from "./Search.module.scss"
 import debounce from 'lodash.debounce'
 import { useDispatch, useSelector } from 'react-redux'
-import { setSearchValue } from '../../redux/slices/filterSlice'
+import { setSearchValue, selectFilter } from '../../redux/slices/filterSlice'
 
 
 const Search = () => {
@@ -22,13 +22,17 @@ const Search = () => {
   }
   const handleClearSearch = () => {
     dispatch(setSearchValue(""))
-    setValue("");
+    if (value.length != 0) {
+      setValue("");
+    }
     inputRef.current.focus();
   }
-  const categoryId = useSelector(state => state.filter.categoryId);
+  const { categoryId } = useSelector(selectFilter);
 
   React.useEffect(() => {
-    setValue("");
+    if (value.length != 0) {
+      setValue("");
+    }
   }, [categoryId]);
 
   return (

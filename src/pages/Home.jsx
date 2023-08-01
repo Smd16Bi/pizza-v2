@@ -1,11 +1,11 @@
 import React from 'react';
-import axios from 'axios';
 import { Categories, Pagination, PizzaBlock, PizzaLoading, Sort } from '../components';
 import { useDispatch, useSelector } from 'react-redux';
-import { setCategoryId, setCurrentPage, setFilters, setSortType } from '../redux/slices/filterSlice';
+import { selectFilter, setCategoryId, setCurrentPage, setFilters, setSortType } from '../redux/slices/filterSlice';
 import qs from 'qs';
 import { useNavigate } from 'react-router';
-import { fetchData } from '../redux/slices/dataSlice';
+import { fetchData, selectData } from '../redux/slices/dataSlice';
+import { NavLink } from 'react-router-dom';
 
 
 const Home = () => {
@@ -13,13 +13,10 @@ const Home = () => {
   const dispatch = useDispatch();
   const isSearch = React.useRef(false);
   const isMounted = React.useRef(false);
-  // Hook React
-  const [label, setLabel] = React.useState("All");
-  // Redux
-  const { categoryId, sort, currentPage, searchValue } = useSelector(state => state.filter);
-  const { items, status } = useSelector((state) => state.data);
 
-  // Method
+  const { categoryId, sort, currentPage, searchValue, label } = useSelector(selectFilter);
+  const { items, status } = useSelector(selectData);
+
   const onClickCategory = (id) => {
     dispatch(setCategoryId(id))
   }
@@ -80,10 +77,6 @@ const Home = () => {
 
   }
 
-  const handlerLabel = (label) => {
-    setLabel(prev => prev = label);
-  }
-
   const renderPizzas = () => {
     switch (status) {
       case "loading":
@@ -91,10 +84,11 @@ const Home = () => {
       case "success":
         return items.map(obj => {
           return (
-            <PizzaBlock
-              {...obj}
-              key={obj.id}
-            />
+            <NavLink key={obj.id} to={obj.id}>
+              <PizzaBlock
+                {...obj}
+              />
+            </NavLink>
           )
         })
 
@@ -113,7 +107,7 @@ const Home = () => {
     <>
       <div className="container">
         <div className="content__top">
-          <Categories onHandlerLabel={handlerLabel} categoryId={categoryId} onCategory={onClickCategory} />
+          <Categories categoryId={categoryId} onCategory={onClickCategory} />
           <Sort sort={sort.id} onSort={onClickSort} />
         </div>
         <h2 className="content__title">{label}</h2>

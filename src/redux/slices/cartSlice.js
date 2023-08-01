@@ -5,7 +5,7 @@ const initialState = {
   totalCount: 0,
   items: []
 }
-// 16 вип 58:42
+
 
 const cartSlice = createSlice({
   name: "cart",
@@ -50,6 +50,8 @@ const cartSlice = createSlice({
   }
 })
 
+
+export const selectCart = (state) => state.cart;
 
 export const { addItem, changeCount, removeItem, clearItems, getTotalPrice, getTotalCount } = cartSlice.actions
 

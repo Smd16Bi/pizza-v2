@@ -4,9 +4,13 @@ import axios from "axios";
 
 export const fetchData = createAsyncThunk(
   'data/fetchDataStatus',
-  async (path) => {
+  async (path, thunkAPI) => {
     const response = await axios.get(path);
-    return response.data
+    if (response.data.length === 0) {
+      return thunkAPI.rejectWithValue("Pizzas are empty")
+    }
+
+    return thunkAPI.fulfillWithValue(response.data);
   }
 )
 
@@ -38,6 +42,8 @@ const dataSlice = createSlice({
     });
   }
 })
+
+export const selectData = (state) => state.data;
 
 export const { setItems } = dataSlice.actions
 export default dataSlice.reducer
