@@ -1,8 +1,7 @@
-import React from 'react'
-import "./scss/app.scss"
+import './scss/app.scss';
 
-import { Header } from './components'
-import { Cart, Home, Notfound, FullPizza } from './pages'
+import { Header } from './components';
+import { Cart, Home, Notfound, FullPizza } from './pages';
 import { Route, Routes } from 'react-router-dom';
 
 const App = () => {
@@ -18,6 +17,6 @@ const App = () => {
         </Routes>
       </div>
     </div>
-  )
-}
-export default App
+  );
+};
+export default App;
