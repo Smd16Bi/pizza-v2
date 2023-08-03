@@ -1,16 +1,19 @@
-import React from 'react'
+import React from 'react';
 import ReactPaginate from 'react-paginate';
 
-
-import styles from "./Pagination.module.scss"
+import styles from './Pagination.module.scss';
 import { useSelector } from 'react-redux';
 import { selectFilter } from '../../redux/slices/filterSlice';
 
-const Pagination = ({ setCurrentPage }) => {
+type PaginationTypeProps = {
+  setCurrentPage: Function;
+};
+
+const Pagination: React.FC<PaginationTypeProps> = ({ setCurrentPage }) => {
   const { currentPage } = useSelector(selectFilter);
-  const handlePage = (event) => {
-    setCurrentPage(event.selected)
-  }
+  const handlePage = (event: any) => {
+    setCurrentPage(event.selected);
+  };
   return (
     <div className={styles.root}>
       <ReactPaginate
@@ -24,7 +27,7 @@ const Pagination = ({ setCurrentPage }) => {
         renderOnZeroPageCount={null}
       />
     </div>
-  )
-}
+  );
+};
 
-export default Pagination
+export default Pagination;
