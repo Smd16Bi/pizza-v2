@@ -6,7 +6,7 @@ const typeNames = ['Thin', 'Traditional'];
 type PizzaBlockTypeProps = {
   id: string;
   title: string;
-  price: string;
+  price: number;
   imageUrl: string;
   sizes: [];
   types: [];
@@ -28,6 +28,7 @@ const PizzaBlock: React.FC<PizzaBlockTypeProps> = ({ id, title, price, imageUrl,
       type: typeNames[activeType],
       size: activeSize,
       uniqId: `${id}_${title}_${activeSize}_${typeNames[activeType]}`,
+      count: 0,
     };
     dispatch(addItem(item));
   };

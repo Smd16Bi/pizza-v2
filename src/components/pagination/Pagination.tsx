@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { selectFilter } from '../../redux/slices/filterSlice';
 
 type PaginationTypeProps = {
-  setCurrentPage: Function;
+  setCurrentPage: (i: number) => void;
 };
 
 const Pagination: React.FC<PaginationTypeProps> = ({ setCurrentPage }) => {

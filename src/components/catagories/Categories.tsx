@@ -2,12 +2,11 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import { setLabel, setSearchValue } from '../../redux/slices/filterSlice';
 
-// 34:58 #22
 const allCategories = ['All', 'Meat', 'Vegetarian', 'Grill', 'Sharp', 'Closed'];
 
 type CategoriesProps = {
   categoryId: number;
-  onCategory: any;
+  onCategory: (i: number) => void;
 };
 
 const Categories: React.FC<CategoriesProps> = ({ categoryId, onCategory }) => {
